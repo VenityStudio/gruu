@@ -1,0 +1,15 @@
+name: gruu
+description: Fast and flexible build tool
+
+deps:
+  jphp-core: '*'
+  jphp-zend-ext: '*'
+
+plugins:
+  - App
+
+sources:
+  - src
+
+includes:
+  - index.php
