@@ -1,11 +1,11 @@
 <?
 
-$plugins = [
+const plugins = [
     "jphp.app",
     "jphp.jppm" // jppm dependencies
 ];
 
-$dependencies = [
+const dependencies = [
     "jppm" => [
         "jphp-core",
         "jphp-runtime",
@@ -14,7 +14,7 @@ $dependencies = [
     ]
 ];
 
-$config = [
+const config = [
     "jphp.app" => [
         "name" => "gruu",
         "version" => "1.0.0-dev",
