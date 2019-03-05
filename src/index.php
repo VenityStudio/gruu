@@ -1,13 +1,15 @@
 <?php 
 
-/*
-    Gruu bootstrap file
-*/
+/**
+ * Gruu bootstrap file
+ */
 
-use php\lib\fs;
+use gruu\ArgsParser;
+use gruu\Gruu;
 
-echo "\$GLOBALS[\"argv\"]:\n";
+$args = new ArgsParser($GLOBALS["argv"]);
 
-var_dump($GLOBALS["argv"]);
-
-echo "Root dir: " . fs::abs("./") . "\n";
+$gruu = new Gruu();
+$gruu->setArgs($args);
+$gruu->setDebug($args->hasFlag("debug"));
+$gruu->start();
