@@ -1,6 +1,6 @@
 <?php
 
-namespace gruu;
+namespace gruu\utils;
 
 
 use php\lib\arr;
