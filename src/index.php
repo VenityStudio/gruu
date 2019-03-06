@@ -4,8 +4,8 @@
  * Gruu bootstrap file
  */
 
-use gruu\ArgsParser;
 use gruu\Gruu;
+use gruu\utils\ArgsParser;
 
 $args = new ArgsParser($GLOBALS["argv"]);
 
