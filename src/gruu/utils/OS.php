@@ -3,8 +3,10 @@
 namespace gruu\utils;
 
 
+use php\lang\Process;
 use php\lang\System;
 use php\lib\str;
+use php\util\Flow;
 
 class OS
 {
@@ -44,5 +46,19 @@ class OS
      */
     public static function isUnix(): bool {
         return self::isLinux() || self::isDarwin();
+    }
+
+    /**
+     * @param string $command
+     * @param string $directory
+     * @param array $customEnv
+     * @return Process
+     */
+    public static function buildProcess(string $command, string $directory = null, array $customEnv = null): Process {
+        if (OS::isWindows()) $command = "cmd.exe /c " . $command;
+        else $command = "bash " . $command;
+
+        $env = Flow::of($_ENV, $customEnv)->toArray(true);
+        return new Process(str::split($command, " "), $directory, $env);
     }
 }

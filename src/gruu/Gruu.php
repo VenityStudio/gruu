@@ -58,11 +58,14 @@ class Gruu
      */
     public function start() {
         if ($this->args->hasFlag("version")) {
-            echo "   ____ ________  ____  __\n";
-            echo "  / __ `/ ___/ / / / / / /\n";
-            echo " / /_/ / /  / /_/ / /_/ / \n";
-            echo " \\__, /_/   \\__,_/\\__,_/  \n";
-            echo "/____/ {$this->getVersion()} by Venity Group\n";
+            Logger::printWithColor("   ____ ________  ____  __\n", "blue+bold");
+            Logger::printWithColor("  / __ `/ ___/ / / / / / /\n", "blue+bold");
+            Logger::printWithColor(" / /_/ / /  / /_/ / /_/ / \n", "blue+bold");
+            Logger::printWithColor(" \\__, /_/   \\__,_/\\__,_/  \n", "blue+bold");
+            Logger::printWithColor("/____/ ", "blue+bold");
+            Logger::printWithColor("{$this->getVersion()} by ", "off");
+            Logger::printWithColor("Venity Group\n", "yellow+bold");
+
             exit(0);
         }
 
