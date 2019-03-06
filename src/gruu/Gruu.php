@@ -75,9 +75,7 @@ class Gruu
             $module = new Module("./build.gruu");
             var_dump($module->getConstants());
         } catch (\Throwable $exception) {
-            Logger::printError($exception->getMessage(), "in {$exception->getFile()}:{$exception->getLine()}");
-            Logger::printWithColor($exception->getTraceAsString() . "\n", "off");
-
+            Logger::printException($exception);
             exit(1);
         }
 

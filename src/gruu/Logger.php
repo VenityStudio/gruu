@@ -35,6 +35,12 @@ class Logger
         "white_bg"   => 47,
     ];
 
+    private static function getColorPrefix(string $color): string {
+        if (OS::isUnix()) return char::of(27) . "[" . self::$ANSI_CODES[$color] . "m";
+
+        return null; // If gruu color system don`t support this OS
+    }
+
     /**
      * @param string $str
      * @param string $color
@@ -45,8 +51,8 @@ class Logger
         $ansi_str = "";
 
         foreach ($color_attrs as $attr)
-            $ansi_str .= char::of(27) . "[" . self::$ANSI_CODES[$attr] . "m";
-        $ansi_str .= $str . char::of(27) . "[" . self::$ANSI_CODES["off"] . "m";
+            $ansi_str .= self::getColorPrefix($attr);
+        $ansi_str .= $str . self::getColorPrefix("off");
 
         return $ansi_str;
     }
@@ -78,5 +84,14 @@ class Logger
     public static function printSuccess(string $success, string $message) {
         self::printWithColor($success . " ", "bold+green");
         self::printWithColor($message . "\n", "bold");
+    }
+
+    /**
+     * @param \Throwable $exception
+     * @throws \php\io\IOException
+     */
+    public static function printException(\Throwable $exception) {
+        Logger::printError($exception->getMessage(), "in {$exception->getFile()}:{$exception->getLine()}");
+        Logger::printWithColor($exception->getTraceAsString() . "\n", "off");
     }
 }
