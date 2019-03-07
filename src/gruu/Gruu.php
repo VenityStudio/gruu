@@ -18,11 +18,6 @@ class Gruu
     private $args;
 
     /**
-     * @var bool
-     */
-    private $debug;
-
-    /**
      * @return ArgsParser
      */
     public function getArgs(): ArgsParser {
@@ -34,20 +29,6 @@ class Gruu
      */
     public function setArgs(ArgsParser $args) {
         $this->args = $args;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDebug(): bool {
-        return $this->debug;
-    }
-
-    /**
-     * @param bool $debug
-     */
-    public function setDebug(bool $debug) {
-        $this->debug = $debug;
     }
 
     public function getVersion(): string {
