@@ -4,7 +4,7 @@ namespace gruu;
 
 
 use gruu\php\GruuModule;
-use gruu\php\PhpDocParser;
+use gruu\tasks\TaskManager;
 use gruu\utils\ArgsParser;
 use gruu\utils\Logger;
 use php\lib\fs;
@@ -16,6 +16,11 @@ class Gruu
      * @var ArgsParser
      */
     private $args;
+
+    /**
+     * @var TaskManager
+     */
+    private $taskManager;
 
     /**
      * @return ArgsParser
@@ -71,17 +76,42 @@ class Gruu
             exit(1);
         }
 
-        $module = new GruuModule("./build.gruu");
-        foreach ($module->getFunctions() as $function) {
-            Logger::printWithColor($function->getName() . ": \n", "blue");
+        $this->taskManager = new TaskManager();
 
-            $data = new PhpDocParser($function->getDocComment());
+        try {
+            $this->taskManager->addModule(new GruuModule("./build.gruu"));
 
-            Logger::printWithColor(var_export($data->getData(), true) . "\n", "off");
-            Logger::printWithColor(var_export($function->invoke(), true) . "\n", "magenta+bold");
+            $task = $this->args->getCommands()[1];
+
+            if ($task == "tasks") {
+                foreach ($this->taskManager->getTasks() as $task) {
+                    Logger::printWithColor("> ", "bold");
+                    Logger::printWithColor($task->getName(), "bold+green");
+
+                    if ($description = $task->getData()["description"])
+                        Logger::printWithColor(" - {$description}\n", "bold");
+                    else echo "\n";
+                }
+                exit(0);
+            }
+
+            if (!$this->taskManager->hasTask($task))
+                throw new \Exception("Task {$task} not found!");
+            $this->taskManager->invokeTask($task);
+        } catch (\Throwable $e) {
+            Logger::printException($e);
+            exit(1);
         }
 
         $time = round((Time::millis() - $time) / 1000, 3);
         Logger::printSuccess("Build successful", "\nTotal time: " . $time);
+    }
+
+    /**
+     * @return TaskManager
+     */
+    public function getTaskManager(): TaskManager
+    {
+        return $this->taskManager;
     }
 }

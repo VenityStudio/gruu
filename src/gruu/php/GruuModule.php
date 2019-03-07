@@ -87,4 +87,11 @@ class GruuModule
     public function getConstants(): array {
         return $this->module->getConstants();
     }
+
+    /**
+     * @return string
+     */
+    public function getName(): string {
+        return $this->module->getName();
+    }
 }

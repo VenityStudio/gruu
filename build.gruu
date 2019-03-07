@@ -2,6 +2,7 @@
 
 /**
  * @task plugins
+ * @description Load plugins
  */
 function plugins() {
     return [
@@ -13,6 +14,7 @@ function plugins() {
 /**
  * @task dependencies
  * @extends plugins
+ * @description Load dependencies
  */
 function dependencies() {
     return [
@@ -26,10 +28,11 @@ function dependencies() {
 }
 
 /**
- * @task config
+ * @task configure
  * @extends dependencies
+ * @description configure project
  */
-function config() {
+function configure() {
     return [
         "jphp.app" => [
             "name" => "gruu",
@@ -40,4 +43,13 @@ function config() {
             "bootstrap" => "index.php"
         ]
     ];
+}
+
+/**
+ * @task build
+ * @extends configure
+ * @description Build gruu using gruu
+ */
+function build() {
+    // Soon ...
 }
