@@ -1,26 +1,43 @@
 <?
 
-const plugins = [
-    "jphp.app",
-    "jphp.jppm" // jppm dependencies
-];
+/**
+ * @task plugins
+ */
+function plugins() {
+    return [
+        "jphp.app",
+        "jphp.jppm" // jppm dependencies
+    ];
+}
 
-const dependencies = [
-    "jppm" => [
-        "jphp-core",
-        "jphp-runtime",
-        "jphp-json-ext",
-        "jphp-zend-ext"
-    ]
-];
+/**
+ * @task dependencies
+ * @extends plugins
+ */
+function dependencies() {
+    return [
+        "jppm" => [
+            "jphp-core",
+            "jphp-runtime",
+            "jphp-json-ext",
+            "jphp-zend-ext"
+        ]
+    ];
+}
 
-const config = [
-    "jphp.app" => [
-        "name" => "gruu",
-        "version" => "1.0.0-dev",
-        "file-name" => "gruu-last",
-        "description" => "Fast and flexible build tool",
-        "sources" => ["./src"],
-        "bootstrap" => "index.php"
-    ]
-];
+/**
+ * @task config
+ * @extends dependencies
+ */
+function config() {
+    return [
+        "jphp.app" => [
+            "name" => "gruu",
+            "version" => "1.0.0-dev",
+            "file-name" => "gruu-last",
+            "description" => "Fast and flexible build tool",
+            "sources" => ["./src"],
+            "bootstrap" => "index.php"
+        ]
+    ];
+}

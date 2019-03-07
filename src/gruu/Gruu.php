@@ -3,10 +3,12 @@
 namespace gruu;
 
 
+use gruu\php\GruuModule;
 use gruu\utils\ArgsParser;
 use gruu\utils\Logger;
 use php\lang\Module;
 use php\lib\fs;
+use php\lib\str;
 use php\time\Time;
 
 class Gruu
@@ -76,12 +78,11 @@ class Gruu
 
         $time = Time::millis();
 
-        try {
-            $module = new Module("./build.gruu");
-            var_dump($module->getConstants());
-        } catch (\Throwable $exception) {
-            Logger::printException($exception);
-            exit(1);
+        $module = new GruuModule("./build.gruu");
+        foreach ($module->getFunctions() as $function) {
+            Logger::printWithColor($function->getName() . ": \n", "blue");
+            Logger::printWithColor("\t" . str::trim($function->getDocComment()) . "\n", "off");
+            Logger::printWithColor(var_export($function->invoke(), true) . "\n", "magenta+bold");
         }
 
         $time = round((Time::millis() - $time) / 1000, 3);
