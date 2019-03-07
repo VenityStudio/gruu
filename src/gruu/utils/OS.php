@@ -49,6 +49,8 @@ class OS
     }
 
     /**
+     * Build process for external executable program
+     *
      * @param string $command
      * @param string $directory
      * @param array $customEnv
@@ -56,9 +58,26 @@ class OS
      */
     public static function buildProcess(string $command, string $directory = null, array $customEnv = null): Process {
         if (OS::isWindows()) $command = "cmd.exe /c " . $command;
-        else $command = "bash " . $command;
 
         $env = Flow::of($_ENV, $customEnv)->toArray(true);
         return new Process(str::split($command, " "), $directory, $env);
+    }
+
+    /**
+     * Build process for:
+     *  - sh/bash on UNIX systems
+     *  - bat on windows system
+     *
+     * @param string $command
+     * @param string|null $directory
+     * @param array|null $customEnv
+     * @return Process
+     */
+    public static function buildShellScriptProcess(string $command,
+                                                   string $directory = null,
+                                                   array $customEnv = null): Process {
+        if (OS::isUnix()) $command = "bash " . $command;
+
+        return self::buildProcess($command, $directory, $customEnv);
     }
 }
