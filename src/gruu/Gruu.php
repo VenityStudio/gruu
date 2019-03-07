@@ -51,6 +51,16 @@ class Gruu
             exit(0);
         }
 
+        if ($this->args->hasFlag("dump")) {
+            if (!fs::exists("./build.gruu")) {
+                Logger::printError("Fatal error", "Gruu build file not found!");
+                exit(1);
+            }
+
+            $module = new GruuModule("./build.gruu");
+            $module->dump("./build.gruu.phb");
+        }
+
         if (!fs::exists("./build.gruu")) {
             Logger::printError("Fatal error", "Gruu build file not found!");
             exit(1);
