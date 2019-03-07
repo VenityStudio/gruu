@@ -51,6 +51,8 @@ class Gruu
             exit(0);
         }
 
+        $time = Time::millis();
+
         if ($this->args->hasFlag("dump")) {
             if (!fs::exists("./build.gruu")) {
                 Logger::printError("Fatal error", "Gruu build file not found!");
@@ -59,14 +61,15 @@ class Gruu
 
             $module = new GruuModule("./build.gruu");
             $module->dump("./build.gruu.phb");
+
+            $dumpTime = round((Time::millis() - $time) / 1000, 3);
+            Logger::printSuccess("Dump successful", "\nTotal time: " . $dumpTime);
         }
 
         if (!fs::exists("./build.gruu")) {
             Logger::printError("Fatal error", "Gruu build file not found!");
             exit(1);
         }
-
-        $time = Time::millis();
 
         $module = new GruuModule("./build.gruu");
         foreach ($module->getFunctions() as $function) {
