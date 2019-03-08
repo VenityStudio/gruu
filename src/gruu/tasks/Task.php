@@ -23,7 +23,7 @@ class Task
     /**
      * @return \ReflectionFunction
      */
-    public function getFunction(): \ReflectionFunction {
+    public function getFunction(): ?\ReflectionFunction {
         return $this->function;
     }
 

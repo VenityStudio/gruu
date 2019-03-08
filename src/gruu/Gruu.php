@@ -4,6 +4,7 @@ namespace gruu;
 
 
 use gruu\php\GruuModule;
+use gruu\plugins\PluginLoader;
 use gruu\tasks\TaskManager;
 use gruu\utils\ArgsParser;
 use gruu\utils\Logger;
@@ -77,26 +78,16 @@ class Gruu
         }
 
         $this->taskManager = new TaskManager();
+        $this->taskManager->addTask(PluginLoader::createTask());
+        $this->taskManager->addHandler("plugins", new PluginLoader());
 
         try {
             $this->taskManager->addModule(new GruuModule("./build.gruu"));
 
             $task = $this->args->getCommands()[1];
-
-            if ($task == "tasks") {
-                foreach ($this->taskManager->getTasks() as $task) {
-                    Logger::printWithColor("> ", "bold");
-                    Logger::printWithColor($task->getName(), "bold+green");
-
-                    if ($description = $task->getData()["description"])
-                        Logger::printWithColor(" - {$description}\n", "bold");
-                    else echo "\n";
-                }
-                exit(0);
-            }
-
             if (!$this->taskManager->hasTask($task))
-                throw new \Exception("Task {$task} not found!");
+                throw new \Exception("Task `{$task}` not found!");
+
             $this->taskManager->invokeTask($task);
         } catch (\Throwable $e) {
             Logger::printException($e);
