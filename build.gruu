@@ -13,7 +13,6 @@ function plugins() {
 
 /**
  * @task dependencies
- * @extends plugins
  * @description Load dependencies
  */
 function dependencies() {

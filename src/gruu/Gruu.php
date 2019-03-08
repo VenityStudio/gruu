@@ -83,6 +83,8 @@ class Gruu
 
         try {
             $this->taskManager->addModule(new GruuModule("./build.gruu"));
+            if (!$this->args->hasFlag("disable-plugins"))
+                $this->taskManager->invokeTask("plugins");
 
             $task = $this->args->getCommands()[1];
             if (!$this->taskManager->hasTask($task))
