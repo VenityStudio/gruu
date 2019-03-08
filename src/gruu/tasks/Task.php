@@ -18,7 +18,7 @@ class Task
     /**
      * @var array
      */
-    private $data;
+    private $data = [];
 
     /**
      * @return \ReflectionFunction

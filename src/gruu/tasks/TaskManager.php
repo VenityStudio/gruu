@@ -99,7 +99,7 @@ class TaskManager
      */
     public function printTasks() {
         foreach ($this->tasks as $task) {
-            Logger::printWithColor("\t> ", "bold");
+            Logger::printWithColor("  -> ", "bold");
             Logger::printWithColor($task->getName(), "bold+blue");
 
             if ($description = $task->getData()["description"])
