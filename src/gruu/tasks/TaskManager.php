@@ -5,6 +5,7 @@ namespace gruu\tasks;
 
 use gruu\php\GruuModule;
 use gruu\php\PhpDocParser;
+use gruu\plugins\PluginLoader;
 use gruu\utils\Logger;
 
 class TaskManager
@@ -36,6 +37,8 @@ class TaskManager
      * @param GruuModule $module
      */
     public function addModule(GruuModule $module) {
+        PluginLoader::registerPlugins($module);
+
         foreach ($module->getFunctions() as $function) {
             $data = new PhpDocParser($function->getDocComment());
             if (!$data->getData()["task"]) continue;

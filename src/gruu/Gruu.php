@@ -79,11 +79,17 @@ class Gruu
         }
 
         $this->taskManager = new TaskManager();
+
+        // Plugin task
         $this->taskManager->addTask(PluginLoader::createTask());
         $this->taskManager->addHandler("plugins", new PluginLoader());
 
         try {
             $this->taskManager->addModule(new GruuModule("./build.gruu"));
+
+            if ($this->taskManager->hasTask("buildScript"))
+                $this->taskManager->invokeTask("buildScript");
+
             if (!$this->args->hasFlag("disable-plugins"))
                 $this->taskManager->invokeTask("plugins");
 

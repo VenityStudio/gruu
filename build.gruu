@@ -1,6 +1,13 @@
 <?
 
 /**
+ * @task buildScript
+ */
+function buildScript() {
+    addModule("./plugins/jphp/app/JPHPAppPlugin.gruu.php");
+}
+
+/**
  * @task plugins
  * @description Load plugins
  */

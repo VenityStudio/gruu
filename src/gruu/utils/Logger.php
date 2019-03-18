@@ -82,7 +82,16 @@ class Logger
      * @throws \php\io\IOException
      */
     public static function printSuccess(string $success, string $message) {
-        self::printWithColor($success . " ", "bold+green");
+        self::printWithColor($success . ": ", "bold+green");
+        self::printWithColor($message . "\n", "bold");
+    }
+
+    /**
+     * @param string $message
+     * @throws \php\io\IOException
+     */
+    public static function printWarning(string $message) {
+        self::printWithColor("Warning: ", "bold+yellow");
         self::printWithColor($message . "\n", "bold");
     }
 

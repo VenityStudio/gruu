@@ -8,6 +8,7 @@
 use gruu\Gruu;
 use gruu\utils\ArgsParser;
 use gruu\utils\OS;
+use gruu\php\GruuModule;
 use php\lang\Process;
 
 $args = new ArgsParser($GLOBALS["argv"]);
@@ -20,6 +21,10 @@ $gruu->start();
 /*
  * Gruu functional API for build script
  */
+
+function gruu(): Gruu {
+    return $GLOBALS["_GRUU"];
+}
 
 /**
  * @return bool
@@ -75,12 +80,12 @@ function executeScript(string $command, string $dir = null): Process {
  * @param string $name
  */
 function invokeTask(string $name) {
-    $GLOBALS["_GRUU"]->getTaskManager()->invokeTask($name);
+    \gruu()->getTaskManager()->invokeTask($name);
 }
 
 /**
  * @param string $path
  */
 function addModule(string $path) {
-    $GLOBALS["_GRUU"]->getTaskManager()->addModule($path);
+    \gruu()->getTaskManager()->addModule(new GruuModule($path));
 }
