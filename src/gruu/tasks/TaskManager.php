@@ -64,7 +64,11 @@ class TaskManager
      * @throws \Exception
      */
     public function invokeTask(string $name) {
-        if (!$this->tasks[$name]) throw new \Exception("Task {$name} not found!");
+        if (!$this->tasks[$name]) {
+            Logger::printError("TaskManager", "Task `$name` not found");
+
+            gruu()->fail();
+        }
 
         $task = $this->tasks[$name];
 
@@ -73,6 +77,14 @@ class TaskManager
         }
 
         Logger::printWithColor("> {$name}\n", "bold");
+
+        if ($task->getData()["alias"]) {
+            Logger::printWithColor("  -> alias to ", "bold");
+            Logger::printWithColor($task->getData()["alias"] . "\n", "bold+blue");
+            $this->invokeTask($task->getData()["alias"]);
+
+            return;
+        }
 
         if ($function = $task->getFunction()) // The task may be empty
             $res = $function->invoke();
@@ -106,7 +118,7 @@ class TaskManager
             Logger::printWithColor($task->getName(), "bold+blue");
 
             if ($description = $task->getData()["description"])
-                Logger::printWithColor(" - {$description}\n", "bold");
+                Logger::printWithColor(" - {$description}\n", "off");
             else echo "\n";
         }
     }

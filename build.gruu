@@ -4,7 +4,7 @@
  * @task buildScript
  */
 function buildScript() {
-    addModule("./plugins/jphp/app/JPHPAppPlugin.gruu.php");
+    addModule("./plugins/jphp/JPHPPlugin.gruu.php");
 }
 
 /**
@@ -13,8 +13,7 @@ function buildScript() {
  */
 function plugins() {
     return [
-        "jphp.app",
-        "jphp.jppm" // jppm dependencies
+        "jphp",
     ];
 }
 
@@ -55,7 +54,8 @@ function configure() {
  * @task build
  * @extends configure
  * @description Build gruu using gruu
+ * @alias jphp:build
  */
 function build() {
-    // Soon ...
+
 }

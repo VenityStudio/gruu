@@ -24,6 +24,11 @@ class Gruu
     private $taskManager;
 
     /**
+     * @var int
+     */
+    private $startTime;
+
+    /**
      * @return ArgsParser
      */
     public function getArgs(): ArgsParser {
@@ -57,7 +62,7 @@ class Gruu
             exit(0);
         }
 
-        $time = Time::millis();
+        $this->startTime = Time::millis();
 
         if ($this->args->hasFlag("dump")) {
             if (!fs::exists("./build.gruu")) {
@@ -68,7 +73,7 @@ class Gruu
             $module = new GruuModule("./build.gruu");
             $module->dump("./build.gruu.phb");
 
-            $dumpTime = round((Time::millis() - $time) / 1000, 3);
+            $dumpTime = round((Time::millis() - $this->startTime) / 1000, 3);
             Logger::printSuccess("Dump successful", "\nTotal time: " . $dumpTime);
             exit(0);
         }
@@ -96,17 +101,24 @@ class Gruu
             $task = $this->args->getCommands()[1];
             if (!$this->taskManager->hasTask($task)) {
                 Logger::printError("Fatal error", "Task `{$task}` not found!");
-                exit(1);
+                $this->fail();
             }
 
             $this->taskManager->invokeTask($task);
 
-            $time = round((Time::millis() - $time) / 1000, 3);
-            Logger::printSuccess("Build successful", "\nTotal time: " . $time);
+            $time = round((Time::millis() - $this->startTime) / 1000, 3);
+            Logger::printSuccess("\nBuild successful", "Total time: " . $time);
         } catch (\Throwable $e) {
             Logger::printException($e);
-            exit(1);
+            $this->fail();
         }
+    }
+
+    public function fail() {
+        $time = round((Time::millis() - $this->startTime) / 1000, 3);
+        Logger::printError("\nBuild error", "Total time: " . $time);
+
+        exit(1);
     }
 
     /**

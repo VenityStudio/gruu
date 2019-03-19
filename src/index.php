@@ -89,3 +89,7 @@ function invokeTask(string $name) {
 function addModule(string $path) {
     \gruu()->getTaskManager()->addModule(new GruuModule($path));
 }
+
+function fail() {
+    \gruu()->fail();
+}

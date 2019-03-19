@@ -48,7 +48,7 @@ class GruuModule
             $this->result = $this->module->call();
         } catch (\Throwable $exception) {
             Logger::printException($exception);
-            exit(1);
+            gruu()->fail();
         }
     }
 
@@ -93,5 +93,12 @@ class GruuModule
      */
     public function getName(): string {
         return $this->module->getName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFile(): string {
+        return $this->file;
     }
 }

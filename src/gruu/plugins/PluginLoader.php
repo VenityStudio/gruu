@@ -6,6 +6,9 @@ namespace gruu\plugins;
 use gruu\php\GruuModule;
 use gruu\tasks\Task;
 use gruu\utils\Logger;
+use php\io\File;
+use php\lib\arr;
+use php\lib\fs;
 
 class PluginLoader
 {
@@ -46,6 +49,12 @@ class PluginLoader
     public static function registerPlugins(GruuModule $module) {
         foreach ($module->getClasses() as $class) {
             if ($class->isSubclassOf(Plugin::class)) {
+                fs::scan(fs::parent($module->getFile()), function (File $file) use ($module) {
+                    if (arr::has([ "php", "gruu" ], fs::ext($file)))
+                        if ($file->getCanonicalFile()->getAbsolutePath() != fs::abs($module->getFile()))
+                            addModule($file);
+                }); // Plugin class loading
+
                 $pluginClass = $class->newInstanceWithoutConstructor();
                 static::$plugins[$pluginClass->getId()] = $pluginClass;
             }
