@@ -36,6 +36,7 @@ class Logger
     ];
 
     private static function getColorPrefix(string $color): string {
+        if (gruu()->getArgs()->hasFlag("no-color")) return null;
         if (OS::isUnix()) return char::of(27) . "[" . self::$ANSI_CODES[$color] . "m";
 
         return null; // If gruu color system don`t support this OS
@@ -102,5 +103,13 @@ class Logger
     public static function printException(\Throwable $exception) {
         Logger::printError($exception->getMessage(), "in {$exception->getFile()}:{$exception->getLine()}");
         Logger::printWithColor($exception->getTraceAsString() . "\n", "off");
+    }
+
+    /**
+     * @param string $message
+     * @throws \php\io\IOException
+     */
+    public static function debug(string $message) {
+        Logger::printWithColor("[DEBUG] " . $message . "\n", "gray+italic");
     }
 }

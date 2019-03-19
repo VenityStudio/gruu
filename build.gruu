@@ -39,13 +39,14 @@ function dependencies() {
  */
 function configure() {
     return [
-        "jphp.app" => [
+        "jphp" => [
             "name" => "gruu",
             "version" => "1.0.0-dev",
             "file-name" => "gruu-last",
             "description" => "Fast and flexible build tool",
             "sources" => ["./src"],
-            "bootstrap" => "index.php"
+            "bootstrap" => "index.php",
+            "args" => "--version"
         ]
     ];
 }
@@ -57,5 +58,15 @@ function configure() {
  * @alias jphp:build
  */
 function build() {
+
+}
+
+/**
+ * @task run
+ * @extends configure
+ * @description Start gruu using gruu
+ * @alias jphp:run
+ */
+function run() {
 
 }

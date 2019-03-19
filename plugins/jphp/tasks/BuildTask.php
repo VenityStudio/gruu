@@ -14,10 +14,11 @@ class BuildTask extends Task
         $this->setName("jphp:build");
         $this->setData([
             "task" => $this->getName(),
-            "description" => "Build jPHP application with dependencies to jar file"
+            "description" => "Build jPHP application with dependencies to jar file",
+            "extends" => "configure"
         ]);
 
-        gruu()->getTaskManager()->addHandler("jphp:build", [$this, "build"]);
+        gruu()->getTaskManager()->addHandler($this->getName(), [$this, "build"]);
     }
 
     /**

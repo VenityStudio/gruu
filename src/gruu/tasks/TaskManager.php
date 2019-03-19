@@ -61,9 +61,10 @@ class TaskManager
 
     /**
      * @param string $name
-     * @throws \Exception
+     * @param bool $force
+     * @throws \php\io\IOException
      */
-    public function invokeTask(string $name) {
+    public function invokeTask(string $name, bool $force = false) {
         if (!$this->tasks[$name]) {
             Logger::printError("TaskManager", "Task `$name` not found");
 
@@ -72,18 +73,29 @@ class TaskManager
 
         $task = $this->tasks[$name];
 
+        if (!$force)
+            if ($task->isCalled()) {
+                Logger::printWithColor("> {$name} [", "bold");
+                Logger::printWithColor("UP-TO-DATE", "yellow+bold");
+                Logger::printWithColor("]\n", "bold");
+
+                return;
+            }
+
         if ($parent = $task->getData()["extends"]) {
             $this->invokeTask($parent);
         }
 
-        Logger::printWithColor("> {$name}\n", "bold");
-
         if ($task->getData()["alias"]) {
-            Logger::printWithColor("  -> alias to ", "bold");
-            Logger::printWithColor($task->getData()["alias"] . "\n", "bold+blue");
+            Logger::printWithColor("> {$name}", "bold");
+            Logger::printWithColor(" [alias to ", "bold");
+            Logger::printWithColor($task->getData()["alias"], "bold+blue");
+            Logger::printWithColor("]\n", "bold");
             $this->invokeTask($task->getData()["alias"]);
 
             return;
+        } else {
+            Logger::printWithColor("> {$name}\n", "bold");
         }
 
         if ($function = $task->getFunction()) // The task may be empty
@@ -92,6 +104,8 @@ class TaskManager
         if (isset($this->handlers[$task->getName()]))
             foreach ($this->handlers[$task->getName()] as $handler)
                 $handler($task->getData(), $res);
+
+        $task->setCalled(true); // Block this task for future calls
     }
 
     /**

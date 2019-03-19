@@ -3,8 +3,8 @@
 namespace plugins\jphp;
 
 use gruu\plugins\Plugin;
-use php\lib\fs;
 use plugins\jphp\tasks\BuildTask;
+use plugins\jphp\tasks\RunTask;
 
 class JPHPPlugin extends Plugin
 {
@@ -15,17 +15,15 @@ class JPHPPlugin extends Plugin
     /**
      * @return mixed
      */
-    public static function getConfiguration()
-    {
-        return self::$configuration;
+    public static function getConfiguration() {
+        return static::$configuration;
     }
 
     /**
      * @return mixed
      */
-    public static function getDependencies()
-    {
-        return self::$dependencies;
+    public static function getDependencies() {
+        return static::$dependencies;
     }
 
     /**
@@ -45,5 +43,6 @@ class JPHPPlugin extends Plugin
         });
 
         gruu()->getTaskManager()->addTask(new BuildTask());
+        gruu()->getTaskManager()->addTask(new RunTask());
     }
 }

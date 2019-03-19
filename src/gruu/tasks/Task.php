@@ -21,6 +21,11 @@ class Task
     private $data = [];
 
     /**
+     * @var bool
+     */
+    private $called = false;
+
+    /**
      * @return \ReflectionFunction
      */
     public function getFunction(): ?\ReflectionFunction {
@@ -60,5 +65,21 @@ class Task
      */
     public function setData(array $data): void {
         $this->data = $data;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCalled(): bool
+    {
+        return $this->called;
+    }
+
+    /**
+     * @param bool $called
+     */
+    public function setCalled(bool $called): void
+    {
+        $this->called = $called;
     }
 }

@@ -78,9 +78,10 @@ function executeScript(string $command, string $dir = null): Process {
 
 /**
  * @param string $name
+ * @param bool $force
  */
-function invokeTask(string $name) {
-    \gruu()->getTaskManager()->invokeTask($name);
+function invokeTask(string $name, bool $force = false) {
+    \gruu()->getTaskManager()->invokeTask($name, $force);
 }
 
 /**
