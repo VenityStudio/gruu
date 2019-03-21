@@ -7,6 +7,7 @@ use gruu\php\GruuModule;
 use gruu\php\PhpDocParser;
 use gruu\plugins\PluginLoader;
 use gruu\utils\Logger;
+use php\lib\str;
 
 class TaskManager
 {
@@ -82,8 +83,8 @@ class TaskManager
                 return;
             }
 
-        if ($parent = $task->getData()["extends"]) {
-            $this->invokeTask($parent);
+        foreach (str::split($task->getData()["extends"], ",") as $taskName) {
+            $this->invokeTask(str::trim($taskName));
         }
 
         if ($task->getData()["alias"]) {

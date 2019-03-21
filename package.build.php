@@ -9,4 +9,6 @@ function task_build(Event $e) {
 
     foreach (["./bin/gruu", "./bin/gruu.bat"] as $file)
         Tasks::copy($file, "./build/");
+
+    Tasks::copy("./plugins/", "./build/plugins");
 }

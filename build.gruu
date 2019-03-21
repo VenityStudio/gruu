@@ -1,10 +1,12 @@
 <?
 
+use php\lib\fs;
+
 /**
  * @task buildScript
  */
 function buildScript() {
-    addModule("./plugins/jphp/JPHPPlugin.gruu.php");
+    // Apply build script at runtime
 }
 
 /**
@@ -53,12 +55,14 @@ function configure() {
 
 /**
  * @task build
- * @extends configure
+ * @extends configure, jphp:build
  * @description Build gruu using gruu
- * @alias jphp:build
  */
 function build() {
+    foreach (["./bin/gruu", "./bin/gruu.bat"] as $file)
+        gruuCopy($file, "./build/");
 
+    gruuCopy("./plugins/", "./build/plugins");
 }
 
 /**

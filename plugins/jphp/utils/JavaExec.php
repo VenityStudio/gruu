@@ -209,8 +209,7 @@ class JavaExec
             $this->jvmArgs, $sysArgs, [$this->mainClass], $args
         )->toArray();
 
-        if (gruu()->getArgs()->hasFlag("debug"))
-            Logger::debug(str::join($commands, " "));
+        Logger::debug(str::join($commands, " "));
 
         $process = new Process(
             $commands,

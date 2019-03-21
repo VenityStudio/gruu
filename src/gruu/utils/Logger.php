@@ -110,6 +110,7 @@ class Logger
      * @throws \php\io\IOException
      */
     public static function debug(string $message) {
-        Logger::printWithColor("[DEBUG] " . $message . "\n", "gray+italic");
+        if (gruu()->getArgs()->hasFlag("debug"))
+            Logger::printWithColor("[DEBUG] " . $message . "\n", "gray+italic");
     }
 }
