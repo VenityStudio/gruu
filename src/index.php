@@ -10,7 +10,6 @@ use gruu\utils\ArgsParser;
 use gruu\utils\OS;
 use gruu\php\GruuModule;
 use php\lang\Process;
-use php\lib\fs;
 
 $args = new ArgsParser($GLOBALS["argv"]);
 
@@ -94,30 +93,4 @@ function addModule(string $path) {
 
 function fail() {
     \gruu()->fail();
-}
-
-/**
- * @param string $path
- * @param string $intoDir
- * @param bool $ignoreErrs
- */
-function gruuCopy(string $path, string $intoDir, bool $ignoreErrs = false) {
-    if (fs::isFile($path)) {
-        if (fs::copy($path, "$intoDir/" . fs::name($path), 1024 * 128) < 0)
-            if (!$ignoreErrs)
-                fail();
-    } else if (fs::isDir($path)) {
-        fs::scan($path, function ($file) use ($path, $intoDir, $ignoreErrs) {
-            $name = fs::relativize($file, $path);
-            if (fs::isDir($file)) {
-                fs::makeDir("$intoDir/$name");
-                return;
-            }
-
-            fs::ensureParent("$intoDir/$name");
-            if (fs::copy($file, "$intoDir/$name", 1024 * 128) < 0)
-                if (!$ignoreErrs)
-                    fail();
-        });
-    }
 }

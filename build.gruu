@@ -1,6 +1,6 @@
 <?
 
-use php\lib\fs;
+use gruu\utils\FileSystem;
 
 /**
  * @task buildScript
@@ -20,7 +20,18 @@ function plugins() {
 }
 
 /**
+ * @task repositories
+ * @description Load repositories
+ */
+function repositories() {
+    return [
+        "https://api.develnext.org/" => "jppm"
+    ];
+}
+
+/**
  * @task dependencies
+ * @extends repositories
  * @description Load dependencies
  */
 function dependencies() {
@@ -28,8 +39,9 @@ function dependencies() {
         "jppm" => [
             "jphp-core",
             "jphp-runtime",
+            "jphp-zend-ext",
             "jphp-json-ext",
-            "jphp-zend-ext"
+            "jphp-compress-ext"
         ]
     ];
 }
@@ -60,9 +72,9 @@ function configure() {
  */
 function build() {
     foreach (["./bin/gruu", "./bin/gruu.bat"] as $file)
-        gruuCopy($file, "./build/");
+        FileSystem::copy($file, "./build/");
 
-    gruuCopy("./plugins/", "./build/plugins");
+    FileSystem::copy("./plugins/", "./build/plugins");
 }
 
 /**

@@ -17,7 +17,7 @@ class RunTask extends Task
         $this->setData([
             "task" => $this->getName(),
             "description" => "Run jPHP application",
-            "extends" => "configure"
+            "extends" => "plugins, repositories, dependencies, configure"
         ]);
 
         gruu()->getTaskManager()->addHandler($this->getName(), [$this, "run"]);
@@ -26,12 +26,13 @@ class RunTask extends Task
     /**
      * @param array $data
      * @param $res
+     * @throws \php\format\ProcessorException
+     * @throws \php\io\IOException
      * @throws \php\lang\IllegalArgumentException
      * @throws \php\lang\IllegalStateException
      */
     public function run(array $data, $res) {
-        $vendor = new Vendor();
-        $vendor->addDirectory(JPHPPlugin::getConfiguration()["vendor"] ?: "./vendor");
+        $vendor = new Vendor(JPHPPlugin::getConfiguration()["vendor"] ?: "./vendor");
 
         $javaExec = new JavaExec();
         $javaExec->addFromVendor($vendor);

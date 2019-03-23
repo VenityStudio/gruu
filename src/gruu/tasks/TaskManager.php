@@ -75,13 +75,8 @@ class TaskManager
         $task = $this->tasks[$name];
 
         if (!$force)
-            if ($task->isCalled()) {
-                Logger::printWithColor("> {$name} [", "bold");
-                Logger::printWithColor("UP-TO-DATE", "yellow+bold");
-                Logger::printWithColor("]\n", "bold");
-
+            if ($task->isCalled())
                 return;
-            }
 
         foreach (str::split($task->getData()["extends"], ",") as $taskName) {
             $this->invokeTask(str::trim($taskName));

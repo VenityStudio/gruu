@@ -129,18 +129,4 @@ class Gruu
     {
         return $this->taskManager;
     }
-
-    /**
-     * @param string $path
-     * @return File
-     * @throws \php\io\IOException
-     */
-    public static function getFile(string $path): File {
-        if (!$_ENV["APP_HOME"]) {
-            Logger::printError("Gruu", "Variable `APP_HOME` not set");
-            fail();
-        }
-
-        return new File(fs::abs($_ENV["APP_HOME"] . "/" . $path));
-    }
 }

@@ -178,7 +178,7 @@ class JavaExec
      * @param Vendor $vendor
      */
     public function addFromVendor(Vendor $vendor) {
-        foreach ($vendor->getFiles() as $file)
+        foreach ($vendor->getClassPath() as $file)
             $this->addClassPath($file);
     }
 

@@ -6,6 +6,7 @@ namespace gruu\plugins;
 use gruu\Gruu;
 use gruu\php\GruuModule;
 use gruu\tasks\Task;
+use gruu\utils\FileSystem;
 use gruu\utils\Logger;
 use php\io\File;
 use php\io\Stream;
@@ -25,7 +26,7 @@ class PluginLoader
      * @throws \php\format\ProcessorException
      */
     public function __construct() {
-        foreach (Gruu::getFile("plugins")->findFiles() as $file) {
+        foreach (FileSystem::getFile("plugins")->findFiles() as $file) {
             if (!$file->isDirectory()) continue;
             if (!($pluginConfFile = new File($file, "plugin.ini"))->exists()) continue;
 
