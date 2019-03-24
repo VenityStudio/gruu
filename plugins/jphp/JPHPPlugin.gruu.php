@@ -40,6 +40,16 @@ class JPHPPlugin extends Plugin
     }
 
     /**
+     * @param array $arr
+     */
+    public static function addDependencies(array $arr) {
+        foreach ($arr as $key => $value) {
+            if (isset(static::$dependencies[$key])) continue;
+            static::$dependencies[$key] = $value;
+        }
+    }
+
+    /**
      * @return array
      */
     public static function getRepositories(): array

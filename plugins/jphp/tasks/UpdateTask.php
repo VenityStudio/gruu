@@ -6,6 +6,7 @@ namespace plugins\jphp\tasks;
 use gruu\tasks\Task;
 use gruu\utils\FileSystem;
 use gruu\utils\Logger;
+use php\io\File;
 use php\lib\arr;
 use plugins\jphp\JPHPPlugin;
 use plugins\jphp\jppm\RemoteRepository;
@@ -36,25 +37,38 @@ class UpdateTask extends Task {
         foreach (JPHPPlugin::getRepositories() as $repository) {
             $repo = new RemoteRepository();
             $repo->setSource($repository);
+
             foreach (JPHPPlugin::getDependencies() as $dependency => $pkgVersion) {
                 $versions = $repo->find($dependency);
                 $versionsKeys = arr::keys($versions);
+                $vendorDir = JPHPPlugin::getConfiguration()["vendor"] ?: "./vendor";
 
                 if ($pkgVersion == "*" || $pkgVersion == "last")
                     $version = arr::pop($versionsKeys);
-                else $version = $versionsKeys[$pkgVersion];
+                elseif (isset(JPHPPlugin::getDependencies()[$dependency])) $version = JPHPPlugin::getDependencies()[$dependency];
+                elseif (isset($versionsKeys[$pkgVersion])) $version = $pkgVersion;
 
-                if ($version == null) {
-                    Logger::printWarning("Package {$dependency} not found in {$repository}");
+                $file = FileSystem::getFile("/repo/jppm/{$dependency}-{$version}");
+                if ($file->exists()) {
                     continue;
                 }
 
-                $file = FileSystem::getFile("/repo/jppm/{$dependency}-{$version}");
-                $file->createNewFile(true);
-                $repo->download($dependency, $version, $file);
+                if ($version == null) {
+                    Logger::printWarning("Package {$dependency}@{$version} not found in {$repository}");
+                    continue;
+                }
 
-                $vendorDir = JPHPPlugin::getConfiguration()["vendor"] ?: "./vendor";
-                (new Vendor($vendorDir))->install($dependency, $file);
+                $file->createNewFile(true);
+                if (!$repo->download($dependency, $version, $file)) {
+                    Logger::printError("jPHP:Update", "Can`t download {$dependency}@{$version}");
+                    fail();
+                }
+
+                $vendor = new Vendor($vendorDir);
+                $vendor->install($dependency, $file);
+                JPHPPlugin::addDependencies($vendor->findDependencies(new File($vendorDir, $dependency)));
+                $this->update($data, $res);
+                return;
             }
         }
     }

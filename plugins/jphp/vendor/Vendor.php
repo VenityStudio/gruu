@@ -34,6 +34,12 @@ class Vendor
         $this->addVendorDirectory($vendorDir);
     }
 
+
+
+    /**
+     * @param string $directory
+     * @return array
+     */
     public function findJars(string $directory): array {
         return fs::scan(new File($directory, "jars"), function ($file) {
             if (fs::ext($file) == "jar") return $file;
@@ -41,10 +47,58 @@ class Vendor
     }
 
     /**
+     * @param string $directory
+     * @return array
+     * @throws \php\format\ProcessorException
+     * @throws \php\io\IOException
+     */
+    public function findSources(string $directory): array {
+        $file = new File($directory, "package.php.yml");
+        if (!$file->exists()) return [];
+
+        $pkg = fs::parseAs($file, "yaml");
+        $arr = [];
+
+        /** @var File $source */
+        foreach ($pkg["sources"] as $source)
+            $arr[] = new File($directory, $source);
+
+        return $arr;
+    }
+
+    /**
+     * @param string $directory
+     * @return array
+     * @throws \php\format\ProcessorException
+     * @throws \php\io\IOException
+     */
+    public function findDependencies(string $directory): array {
+        $file = new File($directory, "package.php.yml");
+        if (!$file->exists()) return [];
+        $deps = [];
+        $yaml = fs::parseAs($file, "yaml");
+
+        if ($yaml["deps"])
+            foreach ($yaml["deps"] as $name => $dep) {
+                if (str::startsWith($dep, ">=") ||
+                    str::startsWith($dep, "<=") ||
+                    str::startsWith($dep, "=<") ||
+                    str::startsWith($dep, "=>"))
+                    $deps[$name] = str::sub($dep, 2);
+                elseif (str::startsWith($dep, "~"))
+                    $deps[$name] = str::sub($dep, 1);
+                else $deps[$name] = $dep;
+            }
+
+        return $deps;
+    }
+
+    /**
      * @param string $path
      */
     public function addToClassPath(string $path) {
         $this->classPath[] = $path;
+        $this->classPath = array_unique($this->classPath);
     }
 
     /**
@@ -65,8 +119,7 @@ class Vendor
     /**
      * @return array
      */
-    public function getClassPath(): array
-    {
+    public function getClassPath(): array {
         return $this->classPath;
     }
 
