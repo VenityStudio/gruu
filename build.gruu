@@ -37,11 +37,11 @@ function repositories() {
 function dependencies() {
     return [
         "jppm" => [
-            "jphp-core",
-            "jphp-runtime",
-            "jphp-zend-ext",
-            "jphp-json-ext",
-            "jphp-compress-ext"
+            "jphp-core" => "*",
+            "jphp-runtime" => "*",
+            "jphp-zend-ext" => "*",
+            "jphp-json-ext" => "*",
+            "jphp-compress-ext" => "*"
         ]
     ];
 }

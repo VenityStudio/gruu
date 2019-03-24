@@ -3,7 +3,6 @@
 namespace plugins\jphp\tasks;
 
 
-use gruu\Gruu;
 use gruu\tasks\Task;
 use gruu\utils\FileSystem;
 use gruu\utils\Logger;
@@ -37,10 +36,13 @@ class UpdateTask extends Task {
         foreach (JPHPPlugin::getRepositories() as $repository) {
             $repo = new RemoteRepository();
             $repo->setSource($repository);
+            foreach (JPHPPlugin::getDependencies() as $dependency => $pkgVersion) {
+                $versions = $repo->find($dependency);
+                $versionsKeys = arr::keys($versions);
 
-            foreach (JPHPPlugin::getDependencies() as $dependency) {
-                $versions = arr::keys($repo->find($dependency));
-                $version = arr::pop($versions);
+                if ($pkgVersion == "*" || $pkgVersion == "last")
+                    $version = arr::pop($versionsKeys);
+                else $version = $versionsKeys[$pkgVersion];
 
                 if ($version == null) {
                     Logger::printWarning("Package {$dependency} not found in {$repository}");
