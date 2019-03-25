@@ -120,7 +120,7 @@ class Vendor
     /**
      * @return array
      */
-    public function getClassPath(): array {
+    public function getClassPath(): ?array {
         return $this->classPath;
     }
 
