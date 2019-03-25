@@ -124,6 +124,24 @@ class Vendor
     }
 
     /**
+     * @throws \php\io\IOException
+     * @throws \php\format\ProcessorException
+     */
+    public function buildClassPath() {
+        foreach ((new File($this->vendorDir))->findFiles() as $file) {
+            if ($file->isFile()) continue;
+
+            /** @var File $jar */
+            foreach ($this->findJars($file) as $jar)
+                $this->addToClassPath($jar->getCanonicalFile()->getAbsolutePath());
+
+            /** @var File $source */
+            foreach ($this->findSources($file) as $source)
+                $this->addToClassPath($source->getCanonicalFile()->getAbsolutePath());
+        }
+    }
+
+    /**
      * Install tar.gz archive
      *
      * @param string $name

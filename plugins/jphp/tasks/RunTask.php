@@ -33,6 +33,7 @@ class RunTask extends Task
      */
     public function run(array $data, $res) {
         $vendor = new Vendor(JPHPPlugin::getConfiguration()["vendor"] ?: "./vendor");
+        $vendor->buildClassPath();
 
         $javaExec = new JavaExec();
         $javaExec->addFromVendor($vendor);
