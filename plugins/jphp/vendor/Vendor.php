@@ -59,9 +59,10 @@ class Vendor
         $pkg = fs::parseAs($file, "yaml");
         $arr = [];
 
-        /** @var File $source */
-        foreach ($pkg["sources"] as $source)
-            $arr[] = new File($directory, $source);
+        if ($pkg["sources"])
+            /** @var File $source */
+            foreach ($pkg["sources"] as $source)
+                $arr[] = new File($directory, $source);
 
         return $arr;
     }
