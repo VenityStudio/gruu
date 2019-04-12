@@ -3,8 +3,14 @@
 namespace gruu\utils;
 
 
+use compress\ArchiveEntry;
+use compress\GzipInputStream;
+use compress\TarArchive;
+use compress\ZipArchive;
 use php\io\File;
+use php\io\Stream;
 use php\lib\fs;
+use php\lib\str;
 
 class FileSystem
 {
@@ -69,5 +75,41 @@ class FileSystem
         }
 
         return new File(fs::abs($_ENV["APP_HOME"] . "/" . $path));
+    }
+
+    /**
+     * @param string $archiveFile
+     * @param string $output
+     * @throws \php\io\IOException
+     */
+    public static function unpack(string $archiveFile, string $output) {
+        switch (str::lower(fs::ext($archiveFile))) {
+            case "gz":
+            case "tar.gz":
+                $archive = new TarArchive(new GzipInputStream($archiveFile));
+                break;
+            case "zip":
+            case "jar":
+                $archive = new ZipArchive(Stream::of($archiveFile));
+                break;
+        }
+
+        if (!$archive) {
+            Logger::printError("FileSystem", "Unsupported archive format for `{$archive}`");
+            fail();
+        }
+
+        Logger::printWithColor("Unpack {$archiveFile} ", "off");
+        $archive->readAll(function (ArchiveEntry $entry, ?Stream $stream) use ($output) {
+            if ($entry->isDirectory()) return;
+
+            $newFile = new File($output, $entry->name);
+            if (!$newFile->exists())
+                $newFile->createNewFile(true);
+
+            fs::copy($stream, $newFile);
+        });
+
+        Logger::printWithColor("done.\n", "bold+green");
     }
 }

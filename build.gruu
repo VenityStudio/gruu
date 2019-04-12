@@ -25,7 +25,9 @@ function plugins() {
  */
 function repositories() {
     return [
-        "https://api.develnext.org/" => "jppm"
+        "jppm" => [
+            "https://api.develnext.org/"
+        ]
     ];
 }
 
@@ -56,6 +58,7 @@ function configure() {
             "name" => "gruu",
             "version" => "1.0.0-dev",
             "file-name" => "gruu-last",
+            "build-dir" => "./gruu-build",
             "description" => "Fast and flexible build tool",
             "sources" => ["./src"],
             "bootstrap" => "index.php",
@@ -71,9 +74,9 @@ function configure() {
  */
 function build() {
     foreach (["./bin/gruu", "./bin/gruu.bat"] as $file)
-        FileSystem::copy($file, "./build/");
+        FileSystem::copy($file, "./gruu-build/");
 
-    FileSystem::copy("./plugins/", "./build/plugins");
+    FileSystem::copy("./plugins/", "./gruu-build/plugins");
 }
 
 /**

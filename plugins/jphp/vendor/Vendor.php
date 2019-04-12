@@ -155,14 +155,7 @@ class Vendor
         FileSystem::clean($file);
         $file->mkdirs();
 
-        $tar = new TarArchive(new GzipInputStream($gzFile));
-        $tar->readAll(function (ArchiveEntry $entry, Stream $stream) use ($file) {
-            if ($entry->isDirectory()) return;
-
-            $newFile = new File($file, $entry->name);
-            $newFile->createNewFile(true);
-            fs::copy($stream, $newFile);
-        });
+        FileSystem::unpack($gzFile, $file);
 
         $jsonFile = new File($this->vendorDir, "paths.json");
         if (!$jsonFile->exists()) $jsonFile->createNewFile(true);

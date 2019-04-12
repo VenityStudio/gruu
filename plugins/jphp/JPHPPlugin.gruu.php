@@ -3,7 +3,6 @@
 namespace plugins\jphp;
 
 use gruu\plugins\Plugin;
-use php\lib\str;
 use plugins\jphp\tasks\BuildTask;
 use plugins\jphp\tasks\RunTask;
 use plugins\jphp\tasks\UpdateTask;
@@ -74,9 +73,7 @@ class JPHPPlugin extends Plugin
         });
 
         gruu()->getTaskManager()->addHandler("repositories", function (array $data, $res) {
-            foreach ($res as $repo => $type)
-                if (str::lower($type) == "jppm")
-                    static::$repositories[] = $repo;
+            static::$repositories[] = $res["jppm"];
         });
 
         gruu()->getTaskManager()->addTask(new BuildTask());

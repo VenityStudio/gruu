@@ -1,5 +1,6 @@
 .idea/**
 build/**
+gruu-build/**
 vendor/**
 
 package-lock.php.yml
