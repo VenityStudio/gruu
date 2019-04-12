@@ -64,7 +64,8 @@ class Logger
      * @throws \php\io\IOException
      */
     public static function printWithColor(string $str, string $color) {
-        System::out()->write(self::withColor($str, $color));
+        if (!gruu()->getArgs()->hasFlag("no-logging"))
+            System::out()->write(self::withColor($str, $color));
     }
 
     /**
